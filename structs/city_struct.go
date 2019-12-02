@@ -1,46 +1,30 @@
-package structs
-import "fmt"
+//Assumption: Each city name is unique. There will be no 2 cities with the same name
 
-//todo issues: equality issue, directions reference
+package structs
+
+//todo issues: directions reference
 
 type City struct {
-    Name string
-    AlienCount int
-    Aliens []Alien
-    Directions []string
-    NorthByName,SouthByName, EastByName, WestByName string
-    North, South, East, West City
+	//Parent *City  : doesn't work to fix recursive issue
+	Name                                             string
+	AlienCount                                       int
+	Aliens                                           []Alien
+	Directions                                       []string
+	NorthByName, SouthByName, EastByName, WestByName string
+	North, South, East, West                         *City
 }
 
-func NewCity(name string,neighbors map[string]string){
-  city := City{Name: name, AlienCount:0}
-  for direction,adjacentCity := range neighbors{
-    city.Directions = append(city.Directions,direction)
-    dir := direction + "ByName" //todo
-    city.*dir = adjacentCity
-  }
-}
-
-func AddAlien(city City,a Alien) {
-  city.AlienCount += 1
-  city.Aliens = append(City.Aliens,a)
-}
-
-func RemoveAlien(city City, a Alien) {
-  city.AlienCount -= 1
-  for i := range city.Aliens{
-    if city.Aliens[i] = a{ //todo
-      city.Aliens = append(city.Aliens[:i], city.Aliens[i+1:]...)
+func NewCity(name string, neighbors []string) *City {
+	city := City{Name: name, AlienCount: 0}
+	for i := range neighbors{ //todp: parse string
+	    direction  =
     }
-  }
+	for direction, _ := range neighbors {
+		city.Directions = append(city.Directions, direction) //todo: is direction capitalized?
+		dir := direction + "ByName"                          //todo
+		city.dir = adjacentCity
+	}
+	return &city
 }
 
-func DestroyBridge(city City, destroyedCity City){
-    for i := range city.Directions{
-        direction := city.Directions[i]
-        if city.direction == destroyedCity{ //todo
-            city.direction = nil  //todo
-        }
-    }
-}
-
+//todo: add functions (add, remove, destroybridges etc.

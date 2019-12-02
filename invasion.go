@@ -20,7 +20,7 @@ import (
 	"strings"
 )
 
-func fightAndDestroy() *structs.World {
+func fightAndDestroy() {
 	cities = world_x.cities
 	for i := range cities {
 		curr_city = cities[i]
