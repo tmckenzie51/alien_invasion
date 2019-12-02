@@ -3,7 +3,6 @@ package structs
 import (
 	"fmt"
 	"math/rand"
-	"strconv"
 )
 
 //todo: Issues: direction issue, unused function issue
@@ -49,19 +48,4 @@ func (a Alien) Travel() *Alien {
 	a.Location = newLocation
 
 	return &a
-}
-
-func (aliens []Alien) GetNames() string {
-	alienNames := ""
-	for i := range aliens {
-		currAlien := aliens[i]
-		if i == len(aliens)-1 {
-			alienNames += strconv.Itoa(currAlien.Id)
-		} else if i == len(aliens)-2 {
-			alienNames += strconv.Itoa(currAlien.Id) + "and "
-		} else {
-			alienNames += strconv.Itoa(currAlien.Id) + ", "
-		}
-	}
-	return alienNames
 }

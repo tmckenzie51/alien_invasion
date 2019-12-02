@@ -52,7 +52,7 @@ func read(fileName string) map[string][][]string {
 		txtLines = append(txtLines, scanner.Text())
 	}
 
-	file.Close()
+	file.Close() //todo: why this an unhandled error?
 
 	for _, eachLine := range txtLines { //example eachLine:  "Foo north=Bar west=Baz South=Qu-ux"
 		cityInfo := strings.Split(eachLine, " ") //example cityInfo : ["Foo", "north=Bar", "west=Baz", "South=Qu-ux"]
@@ -75,10 +75,25 @@ func fightAndDestroy(worldX structs.World) {
 		aliens := currCity.Aliens
 		if numAliens >= 2 {
 			worldX.DestroyCity(currCity)
-			alienNames := aliens.GetNames()
+			alienNames := getNames(aliens)
 			fmt.Printf(currCity.Name, " has been destroyed by aliens: %d\n", alienNames)
 		}
 	}
+}
+
+func getNames(aliens []structs.Alien) string {
+	alienNames := ""
+	for i := range aliens {
+		currAlien := aliens[i]
+		if i == len(aliens)-1 {
+			alienNames += strconv.Itoa(currAlien.Id)
+		} else if i == len(aliens)-2 {
+			alienNames += strconv.Itoa(currAlien.Id) + "and "
+		} else {
+			alienNames += strconv.Itoa(currAlien.Id) + ", "
+		}
+	}
+	return alienNames
 }
 
 func wander(cities []structs.City) {
