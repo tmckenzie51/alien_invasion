@@ -20,71 +20,70 @@ import (
 	"strings"
 )
 
-func fightAndDestroy() {
-	cities = world_x.cities
-	for i := range cities {
-		curr_city = cities[i]
-		num_aliens = curr_city.alien_count
-		aliens = curr_city.aliens()
-		if num_aliens >= 2 {
-			world_x.destroy(curr_city)
-			curr_city.fight()
-		}
-		fmt.Printf("%d has been destroyed by aliens %d\n", curr_city, aliens)
-	}
-}
-
-func wander() {
-	cities = world_x.cities
-	for i, curr_city := range cities {
-		a = curr_city.aliens
-		a[0].travel()
-	}
-}
-
-func read(fileName string) *map[string]string {
-	worldMap := make(map[string]string)
-	file, err := os.Open(fileName)
-	if err != nil {
-		log.Fatalf("failed opening file: %s", err)
-	}
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-	var txtlines []string
-
-	for scanner.Scan() {
-		txtlines = append(txtlines, scanner.Text())
-	}
-
-	file.Close()
-
-	for _, eachline := range txtlines {
-		cityInfo = strings.Split(eachline, " ")
-		for i := range cityInfo {
-			if i == 0 {
-				cityName = cityInfo[i]
-			} else {
-				niehgborInfo = strings.Split(cityInfo[i], "=")
-				worldMap[cityName] = neighborInfo
-			}
-		}
-	}
-	return &worldMap
-}
-
 func main() {
-	worldMap := read("/X.txt")
+	worldMap := read("/X.txt") //todo: create "X.txt" file
 	numAliens, _ := strconv.Atoi(os.Args[3])
-	worldX := structs.World.NewWorld('X', worldMap)
-	structs.World.worldX.LaunchInvasion(numAliens) //todo: not sure what's the right way to go about this
-	for i := range 10000 {
-		fightAndDestroy()
-		numAliens = worldX.AlienCount
+	worldX := structs.NewWorld("X", worldMap)
+	worldX.LaunchInvasion(numAliens)
+	for i := 0; i <= 10000; i++ { // todo(REFINE): save num_iters as a const
+		fightAndDestroy(worldX)
+		numAliens = worldX.NumAliens
 		if numAliens <= 0 {
 			worldX.PrintMap()
 			return
 		} else {
 			wander()
 		}
+	}
+}
+
+func read(fileName string) map[string][][]string {
+	worldMap := make(map[string][][]string)
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("failed opening file: %s", err)
+	}
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	var txtLines []string
+
+	for scanner.Scan() {
+		txtLines = append(txtLines, scanner.Text())
+	}
+
+	file.Close()
+
+	for _, eachLine := range txtLines { //example eachLine:  "Foo north=Bar west=Baz South=Qu-ux"
+		cityInfo := strings.Split(eachLine, " ") //example cityInfo : ["Foo", "north=Bar", "west=Baz", "South=Qu-ux"]
+		cityName := cityInfo[0]                  //example: "Foo"
+		for i := range cityInfo {
+			if i > 0 {
+				neighborInfo := strings.Split(cityInfo[i], "=")               // example neighborInfo : ["north","bar"]
+				worldMap[cityName] = append(worldMap[cityName], neighborInfo) //worldMap["Foo"] = [["north","Bar"], ["west",Baz"], ["South=Qu-ux"]
+			}
+		}
+	}
+	return worldMap
+}
+
+func fightAndDestroy(worldX structs.World) {
+	cities := worldX.Cities
+	for i := range cities {
+		currCity := cities[i]
+		numAliens := currCity.AlienCount
+		aliens := currCity.Aliens
+		if numAliens >= 2 {
+			worldX.DestroyCity(currCity)
+			currCity.fight() //todo: not sure if i need this
+		}
+		fmt.Printf("%d has been destroyed by aliens %d\n", curr_city, aliens)
+	}
+}
+
+func wander() {
+	cities = world_x.Cities
+	for i, curr_city := range cities {
+		a = curr_city.aliens
+		a[0].travel()
 	}
 }

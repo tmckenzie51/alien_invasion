@@ -11,9 +11,9 @@ type Alien struct {
 	Location City
 }
 
-func NewAlien(id int, location City) *Alien {
+func NewAlien(id int, location City) Alien {
 	a := Alien{Id: id, Location: location}
-	return &a
+	return a
 }
 
 func Travel(a Alien) *Alien {
