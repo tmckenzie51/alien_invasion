@@ -26,13 +26,14 @@ func main() {
 	worldX := structs.NewWorld("X", worldMap)
 	worldX.LaunchInvasion(numAliens)
 	for i := 0; i <= 10000; i++ { // todo(REFINE): save num_iters as a const
+		cities := worldX.Cities
 		fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
 		if numAliens <= 0 {
 			worldX.PrintMap()
 			return
 		} else {
-			wander()
+			wander(cities)
 		}
 	}
 }
@@ -74,16 +75,17 @@ func fightAndDestroy(worldX structs.World) {
 		aliens := currCity.Aliens
 		if numAliens >= 2 {
 			worldX.DestroyCity(currCity)
-			currCity.fight() //todo: not sure if i need this
+			alienNames := aliens.GetNames()
+			fmt.Printf(currCity.Name, " has been destroyed by aliens: %d\n", alienNames)
 		}
-		fmt.Printf("%d has been destroyed by aliens %d\n", curr_city, aliens)
 	}
 }
 
-func wander() {
-	cities = world_x.Cities
-	for i, curr_city := range cities {
-		a = curr_city.aliens
-		a[0].travel()
+func wander(cities []structs.City) {
+	for i := range cities {
+		currCity := cities[i]
+		aliens := currCity.Aliens
+		a := aliens[0]
+		a.Travel()
 	}
 }
