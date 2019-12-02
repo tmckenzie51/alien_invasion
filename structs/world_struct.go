@@ -3,34 +3,49 @@ import (
     "fmt"
     "math/rand"
 )
-//todo: do I have to do package main and import fmt here?
 
 type World struct {
-    name string
-    cities []city{}
-    num_aliens int
+    Name string
+    Cities []City
+    NumAliens int
 }
 
-func new_world(world_name string, world_map map[string][]string) *world{
-  world.name = world_name
-  //todo: figure out how to add neighbors
-  city_neighbors_map := map[city{}][]city{}
-  for city_name, neighbors := range m{
-        curr_city = city.new_city(city_name)
-        world.cities = append(world.cities,curr_city)
+func NewWorld(worldName string, worldMap map[string][]string) *World {
+    world := World{Name: worldName}
+    nameToCity := make(map[string]City)
+    for cityName, neighbors := range worldMap {
+        city = City.NewCity(cityName, neighbors)
+        world.Cities = append(world.cities, city)
+        nameToCity[city_name] = city
+    }
+    for city := range world.cities {
+        if city.NorthByName != nil {
+            city.North = nameToCity[city.NorthByName]
+        }
+        if city.SouthByName != nil {
+            city.South = nameToCity[city.SouthByName]
+        }
+        if city.EastByName != nil {
+            city.East = nameToCity[city.EastByName]
+        }
+        if city.WestByName != nil {
+            city.West = nameToCity[city.WestByName]
+        }
+    }
+}
 
-  }
-  for city_name,neighbors := range m{
 
-  }
 
-func launch_invasion(num_aliens int) *world{
-  world.num_aliens = num_aliens
-  for i := range num_aliens{
-    a = alien.new_alien(i)
-    rand_city = world.cities[rand.Intn(len(cities))]
-    rand_city.add_alien(a)
-  }
+func LaunchInvasion(numAliens int) *World{
+    world := World{NumAliens: numAliens} //refernce to world giving issues
+    for i := range numAliens{
+        randCity = World.Cities[rand.Intn(len(World.Cities))]
+        a = Alien.NewAlien(i,randCity)
+        randCity.AlienCount += 1
+        randCity.Aliens = append(randCity.Aliens,a)
+        rand_city.add_alien(a)
+    }
+    return &world
 }
 
 func destroy_city(city city {}) *world{

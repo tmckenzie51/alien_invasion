@@ -1,42 +1,46 @@
 package structs
 import "fmt"
 
-type city struct {
-    name string
-    alien_count int
-    aliens []alien{}
-    directions []string
-    north, south, east, west city{}
+//todo issues: equality issue, directions reference
+
+type City struct {
+    Name string
+    AlienCount int
+    Aliens []Alien
+    Directions []string
+    NorthByName,SouthByName, EastByName, WestByName string
+    North, South, East, West City
 }
 
-//todo: not sure if map[string]city{} will work as a type because that city may not be declared as yet.
-func new_city(name string,neighbors map[string]city{}) *city{
-  city.name = city_name
-  for direction,adjacent_city := neighbors{
-    city.directions = append(city.directions,direction)
-    city.direction = adjacent_city
+func NewCity(name string,neighbors map[string]string){
+  city := City{Name: name, AlienCount:0}
+  for direction,adjacentCity := range neighbors{
+    city.Directions = append(city.Directions,direction)
+    dir := direction + "ByName" //todo
+    city.*dir = adjacentCity
   }
 }
 
-func add_alien(a alien{}) *city{
-  city.alien_count += 1
-  city.aliens = append(city.aliens,a)
+func AddAlien(city City,a Alien) {
+  city.AlienCount += 1
+  city.Aliens = append(City.Aliens,a)
 }
 
-func remove_alien(a alien{}) *city {
-  city.alien_count -= 1
-  for i := range city.aliens{
-    if city.aliens[i] == a{
-      city.aliens = append(city.aliens[:i], city.aliens[i+1:]...)
+func RemoveAlien(city City, a Alien) {
+  city.AlienCount -= 1
+  for i := range city.Aliens{
+    if city.Aliens[i] = a{ //todo
+      city.Aliens = append(city.Aliens[:i], city.Aliens[i+1:]...)
     }
   }
 }
 
-func destroy_bridge(curr_city city{}, destroyed_city city{}){
-  for i : range curr_city.directions{
-    direction = curr_city.directions[i]
-    if curr_city.direction == destroyed_city{
-      curr_city.direction = nil
+func DestroyBridge(city City, destroyedCity City){
+    for i := range city.Directions{
+        direction := city.Directions[i]
+        if city.direction == destroyedCity{ //todo
+            city.direction = nil  //todo
+        }
     }
-  }
 }
+

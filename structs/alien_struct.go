@@ -2,22 +2,23 @@ package structs
 
 import "math/rand"
 
-type alien struct {
-	id       int
-	location City
+type Alien struct {
+	Id       int
+	Location City
 }
 
-func new_alien(id int, location string) *alien {
-	a := alien{id: id, location: location}
+func NewAlien(id int, location City) *Alien {
+	a := Alien{Id: id, Location: location}
 	return &a
 }
 
-func travel(a) *alien {
-	prev_location = a.location
-	directions = prev_location.directions
-	direction = directions[rand.Intn(len(directions))]
-	new_location = prev_location.direction
-	prev_location.remove_alien(a)
-	new_location.add_alien(a)
-	a.location = new_location
+func Travel(a Alien) *Alien {
+	prevLocation := a.Location
+	directions := prevLocation.Directions
+	direction := directions[rand.Intn(len(directions))] //todo: fix the direction part
+	newLocation := prevLocation.*direction
+	City.RemoveAlien(prevLocation,a) //todo: fix these
+	City.AddAlien(newLocation,a)
+	a.Location = newLocation
+	return &a
 }
