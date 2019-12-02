@@ -41,7 +41,7 @@ func (worldX World) LaunchInvasion(numAliens int) {
 	worldX.NumAliens = numAliens
 	for i := 0; i <= numAliens; i++ {
 		randCity := worldX.Cities[rand.Intn(len(worldX.Cities))]
-		a := NewAlien(i, randCity)
+		a := NewAlien(i)
 		randCity.AddAlien(a)
 	}
 }

@@ -7,45 +7,33 @@ import (
 
 //todo: Issues: direction issue, unused function issue
 type Alien struct {
-	Id       int
-	Location City
+	Id int
 }
 
-func NewAlien(id int, location City) Alien {
-	a := Alien{Id: id, Location: location}
+func NewAlien(id int) Alien {
+	a := Alien{Id: id}
 	return a
 }
 
-func (a Alien) Travel() *Alien {
-	prevLocation := a.Location
-	directions := prevLocation.Directions
-	direction := directions[rand.Intn(len(directions))]
-	switch direction { //todo : complete switch statement
-	case "North": //todo: declare const directions, and iterate over the const directions in switch cases
+func (a Alien) Travel(city City) {
+	prevLocation := city
+	direction := prevLocation.Directions[rand.Intn(len(prevLocation.Directions))]
+	prevLocation.RemoveAlien(a)
+	switch direction {
+	case "north": //todo (REFINE): declare const directions, and iterate over the const directions in switch cases
 		newLocation := prevLocation.North
-	case "South":
+		newLocation.AddAlien(a)
+	case "south":
 		newLocation := prevLocation.South
-	case "East":
+		newLocation.AddAlien(a)
+	case "east":
 		newLocation := prevLocation.East
-	case "West":
+		newLocation.AddAlien(a)
+	case "west":
 		newLocation := prevLocation.West
+		newLocation.AddAlien(a)
 	default:
 		fmt.Println("travel direction error")
 	}
 
-	//Remove Alien from previous city
-	prevLocation.AlienCount -= 1
-	for i := range prevLocation.Aliens {
-		if prevLocation.Aliens[i].Id == a.Id {
-			prevLocation.Aliens = append(prevLocation.Aliens[:i], prevLocation.Aliens[i+1:]...)
-		}
-	}
-
-	//Add Alien to new city
-	newLocation.AlienCount += 1
-	newLocation.Aliens = append(newLocation.Aliens, a)
-
-	a.Location = newLocation
-
-	return &a
 }

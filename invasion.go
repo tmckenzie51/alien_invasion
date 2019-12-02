@@ -101,6 +101,6 @@ func wander(cities []structs.City) {
 		currCity := cities[i]
 		aliens := currCity.Aliens
 		a := aliens[0]
-		a.Travel()
+		a.Travel(currCity)
 	}
 }

@@ -81,4 +81,11 @@ func (city City) DestroyBridge(destroyedCity City) {
 	}
 }
 
-//todo: add functions ( remove, etc.
+func (city City) RemoveAlien(a Alien) {
+	city.AlienCount -= 1
+	for i := range city.Aliens {
+		if city.Aliens[i].Id == a.Id {
+			city.Aliens = append(city.Aliens[:i], city.Aliens[i+1:]...)
+		}
+	}
+}
