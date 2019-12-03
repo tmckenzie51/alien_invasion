@@ -7,19 +7,19 @@ import (
 
 type World struct {
 	Name      string
-	Cities    []City
+	Cities    []*City
 	NumAliens int
 }
 
-func NewWorld(worldName string, worldMap map[string][][]string) World {
+func NewWorld(worldName string, worldMap map[string][][]string) *World {
 	world := World{Name: worldName}
 	nameToCity := make(map[string]*City)
 
 	//Create main cities listed
 	for cityName, neighborInfo := range worldMap {
-		pointerToCity, city := NewCity(cityName, neighborInfo)
+		city := NewCity(cityName, neighborInfo)
 		world.Cities = append(world.Cities, city)
-		nameToCity[cityName] = pointerToCity
+		nameToCity[cityName] = city
 	}
 
 	//Convert from direction from string to City type
@@ -28,45 +28,40 @@ func NewWorld(worldName string, worldMap map[string][][]string) World {
 		if city.NorthByName != "" {
 			city.North = nameToCity[city.NorthByName]
 			if !contains(world.Cities, city.NorthByName) {
-				//northNeighbors := [][]string
-				northCityPointer, northCity := NewCity(city.NorthByName, nil)
+				northCity := NewCity(city.NorthByName, nil)
 				world.Cities = append(world.Cities, northCity)
-				nameToCity[city.NorthByName] = northCityPointer
+				nameToCity[city.NorthByName] = northCity
 			}
 		}
 		if city.SouthByName != "" {
 			city.South = nameToCity[city.SouthByName]
 			if !contains(world.Cities, city.SouthByName) {
-				//southNeighbors := [][]string
-				southCityPointer, southCity := NewCity(city.SouthByName, nil)
+				southCity := NewCity(city.SouthByName, nil)
 				world.Cities = append(world.Cities, southCity)
-				nameToCity[city.SouthByName] = southCityPointer
+				nameToCity[city.SouthByName] = southCity
 			}
 		}
 		if city.EastByName != "" {
 			city.East = nameToCity[city.EastByName]
 			if !contains(world.Cities, city.EastByName) {
-				//eastNeighbors := [][]string
-				eastCityPointer, eastCity := NewCity(city.EastByName, nil)
+				eastCity := NewCity(city.EastByName, nil)
 				world.Cities = append(world.Cities, eastCity)
-				nameToCity[city.SouthByName] = eastCityPointer
+				nameToCity[city.SouthByName] = eastCity
 			}
 		}
 		if city.WestByName != "" {
 			city.West = nameToCity[city.WestByName]
 			if !contains(world.Cities, city.WestByName) {
-				//westNeighbors := [][]string
-				westCityPointer, westCity := NewCity(city.WestByName, nil)
+				westCity := NewCity(city.WestByName, nil)
 				world.Cities = append(world.Cities, westCity)
-				nameToCity[city.WestByName] = westCityPointer
+				nameToCity[city.WestByName] = westCity
 			}
 		}
 	}
-
-	return world
+	return &world
 }
 
-func contains(cities []City, cityName string) bool {
+func contains(cities []*City, cityName string) bool {
 	for i := range cities {
 		if cities[i].Name == cityName {
 			return true
@@ -75,30 +70,37 @@ func contains(cities []City, cityName string) bool {
 	return false
 }
 
-func (worldX World) LaunchInvasion(numAliens int) World {
+func (worldX *World) LaunchInvasion(numAliens int) *World {
 	worldX.NumAliens = numAliens
 	for i := 0; i < numAliens; i++ {
 		randIndex := rand.Intn(len(worldX.Cities))
 		randCity := worldX.Cities[randIndex]
 		a := NewAlien(i)
-		randCity = randCity.AddAlien(a)
-		//replace randCity in worldX.Cities
-		worldX.Cities[randIndex] = randCity
-		fmt.Println(randCity.AlienCount, " aliens in ", randCity.Name)
+		randCity.AddAlien(a)
+		fmt.Println(randCity.AlienCount, " aliens in ", randCity.Name) //todo: remove later
 	}
 	return worldX
 }
 
-func (worldX World) DestroyCity(city City) {
-	fmt.Println("destroy ", city.Name)
+func (worldX World) DestroyCity(city *City) {
+	fmt.Println("city being destroyed: ", city.Name)
+	var cityIndex []int //list of indices of cities to be destroyed in the worldX.Cities list/array
 	for i := range worldX.Cities {
 		currCity := worldX.Cities[i]
-		if currCity.Name == city.Name { //delete city
-			worldX.Cities = append(worldX.Cities[:i], worldX.Cities[i+1:]...)
-		} else { //delete bridges leading into the city to be destroyed
+		if currCity.Name != city.Name { //delete bridges leading into the city to be destroyed
 			currCity.DestroyBridge(city)
+		} else {
+			cityIndex = append(cityIndex, i)
 		}
 	}
+
+	//delete cities from world
+	for j := range cityIndex {
+		index := cityIndex[j]
+		worldX.Cities = append(worldX.Cities[:index], worldX.Cities[index+1:]...)
+	}
+
+	//update number of aliens in the world
 	numCityAliens := city.AlienCount
 	worldX.NumAliens -= numCityAliens
 }

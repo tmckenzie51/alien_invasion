@@ -13,14 +13,14 @@ type City struct {
 	North, South, East, West                         *City
 }
 
-func NewCity(name string, neighborInfo [][]string) (*City, City) {
+func NewCity(name string, neighborInfo [][]string) *City {
 	city := City{Name: name, AlienCount: 0}
 	for i := range neighborInfo {
 		direction := neighborInfo[i][0] //example direction : "north". Note: direction is not capitalized
 		adjacentCity := neighborInfo[i][1]
 		city.Directions = append(city.Directions, direction)
 		switch direction {
-		case "north": //todo(REFINE) : declare const directions, and iterate over the const directions in switch cases
+		case "north":
 			city.NorthByName = adjacentCity
 		case "south":
 			city.SouthByName = adjacentCity
@@ -32,52 +32,66 @@ func NewCity(name string, neighborInfo [][]string) (*City, City) {
 			fmt.Println("NewCity declaration direction error")
 		}
 	}
-	return &city, city
+	return &city
 }
 
-func (city City) AddAlien(a Alien) City {
+func (city *City) AddAlien(a Alien) {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
-	return city
 }
 
-func (city City) DestroyBridge(destroyedCity City) {
+func (city *City) DestroyBridge(destroyedCity *City) {
+	fmt.Println("start destroying bridge")
+	fmt.Println("destroyed city: ", destroyedCity.Name)
+	fmt.Println("city being checked for bridges: ", city.Name)
+	fmt.Println("directions from ", city.Name, " are : ", city.Directions)
+	var directionsIndex []int
 	for i := range city.Directions {
 		direction := city.Directions[i]
-		adjacentCity := ""
+		fmt.Println("direction being considered for destruction: ", direction)
 		switch direction {
-		case "north": //todo(REFINE) : declare const directions, and iterate over the const directions in switch cases
-			adjacentCity = city.NorthByName
-			if adjacentCity == city.Name {
+		case "north":
+			adjacentCity := city.North
+			if adjacentCity.Name == destroyedCity.Name {
+				fmt.Println("let's destroy the north direction")
 				city.North = nil
 				city.NorthByName = ""
-				city.Directions = append(city.Directions[:i], city.Directions[i+1:]...)
+				directionsIndex = append(directionsIndex, i)
 			}
 		case "south":
-			adjacentCity = city.SouthByName
-			if adjacentCity == city.Name {
+			adjacentCity := city.South
+			if adjacentCity.Name == destroyedCity.Name {
+				fmt.Println("let's destroy the south direction")
 				city.South = nil
 				city.SouthByName = ""
-				city.Directions = append(city.Directions[:i], city.Directions[i+1:]...)
+				directionsIndex = append(directionsIndex, i)
 			}
 		case "east":
-			adjacentCity = city.EastByName
-			if adjacentCity == city.Name {
+			adjacentCity := city.East
+			if adjacentCity.Name == destroyedCity.Name {
 				city.East = nil
 				city.EastByName = ""
-				city.Directions = append(city.Directions[:i], city.Directions[i+1:]...)
+				directionsIndex = append(directionsIndex, i)
 			}
 		case "west":
-			adjacentCity = city.WestByName
-			if adjacentCity == city.Name {
+			adjacentCity := city.West
+			fmt.Println("in west case with adjacent city: ", adjacentCity)
+			if adjacentCity.Name == destroyedCity.Name {
 				city.West = nil
 				city.WestByName = ""
-				city.Directions = append(city.Directions[:i], city.Directions[i+1:]...)
+				directionsIndex = append(directionsIndex, i)
 			}
 		default:
 			fmt.Println("DestroyBridge direction error")
 		}
 	}
+
+	//update directions/bridges leading out from the city
+	for j := range directionsIndex {
+		index := directionsIndex[j]
+		city.Directions = append(city.Directions[:index], city.Directions[index+1:]...)
+	}
+	fmt.Println("destroy bridge function ended")
 }
 
 func (city City) RemoveAlien(a Alien) {

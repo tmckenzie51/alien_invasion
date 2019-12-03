@@ -14,25 +14,30 @@ func NewAlien(id int) Alien {
 	return a
 }
 
-func (a Alien) Travel(city City) {
+func (a Alien) Travel(city *City) {
 	prevLocation := city
-	direction := prevLocation.Directions[rand.Intn(len(prevLocation.Directions))]
+	fmt.Println(prevLocation.Name)
+	fmt.Println(prevLocation.Directions)
 	prevLocation.RemoveAlien(a)
-	switch direction {
-	case "north": //todo (REFINE): declare const directions, and iterate over the const directions in switch cases
-		newLocation := prevLocation.North
-		newLocation.AddAlien(a)
-	case "south":
-		newLocation := prevLocation.South
-		newLocation.AddAlien(a)
-	case "east":
-		newLocation := prevLocation.East
-		newLocation.AddAlien(a)
-	case "west":
-		newLocation := prevLocation.West
-		newLocation.AddAlien(a)
-	default:
-		fmt.Println("travel direction error")
+	if len(prevLocation.Directions) > 0 {
+		direction := prevLocation.Directions[rand.Intn(len(prevLocation.Directions))]
+		fmt.Println(direction)
+		switch direction {
+		case "north": //todo (REFINE): declare const directions, and iterate over the const directions in switch cases
+			newLocation := prevLocation.North
+			newLocation.AddAlien(a)
+		case "south":
+			fmt.Println(prevLocation.South)
+			newLocation := prevLocation.South
+			newLocation.AddAlien(a)
+		case "east":
+			newLocation := prevLocation.East
+			newLocation.AddAlien(a)
+		case "west":
+			newLocation := prevLocation.West
+			newLocation.AddAlien(a)
+		default:
+			fmt.Println("travel direction error")
+		}
 	}
-
 }

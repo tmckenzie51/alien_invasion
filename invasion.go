@@ -21,19 +21,22 @@ import (
 )
 
 func main() {
-	worldMap := read("./tests/X.txt") //todo: check if this works
+	worldMap := read("./tests/X.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("X", worldMap)
+	fmt.Println("just created this world")
+	worldX.PrintMap()
 	worldX = worldX.LaunchInvasion(numAliens)
-	for i := 0; i < 10000; i++ { // todo(REFINE): save num_iters as a const
-		cities := worldX.Cities
-		fightAndDestroy(worldX)
+	fmt.Println("world after launch: ")
+	worldX.PrintMap()
+	for i := 0; i < 10000; i++ {
+		worldX = fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
 		if numAliens == 0 || i == 9999 {
 			worldX.PrintMap()
 			return
 		} else {
-			wander(cities)
+			worldX = wander(worldX)
 		}
 	}
 }
@@ -67,19 +70,27 @@ func read(fileName string) map[string][][]string {
 	return worldMap
 }
 
-func fightAndDestroy(worldX structs.World) {
+func fightAndDestroy(worldX *structs.World) *structs.World {
 	cities := worldX.Cities
-	for i := range cities {
+	var citiesToDestroy []*structs.City
+	for i := range cities { //cities is getting confused because elements are being destroyed while in the loop
 		currCity := cities[i]
 		numAliens := currCity.AlienCount
-		aliens := currCity.Aliens
-		//fmt.Println("num aliens in ", currCity.Name)
 		if numAliens >= 2 {
-			worldX.DestroyCity(currCity)
-			alienNames := getNames(aliens)
-			fmt.Printf(currCity.Name, " has been destroyed by aliens: %d\n", alienNames)
+			citiesToDestroy = append(citiesToDestroy, currCity)
 		}
 	}
+
+	for j := range citiesToDestroy {
+		currCity := citiesToDestroy[j]
+		worldX.DestroyCity(currCity)
+		aliens := currCity.Aliens
+		alienNames := getNames(aliens)
+		destroyStatement := currCity.Name + " has been destroyed by aliens: " + alienNames
+		fmt.Println(destroyStatement)
+
+	}
+	return worldX
 }
 
 func getNames(aliens []structs.Alien) string {
@@ -88,8 +99,8 @@ func getNames(aliens []structs.Alien) string {
 		currAlien := aliens[i]
 		if i == len(aliens)-1 {
 			alienNames += strconv.Itoa(currAlien.Id)
-		} else if i == len(aliens)-2 {
-			alienNames += strconv.Itoa(currAlien.Id) + "and "
+		} else if (i == len(aliens)-2) && (len(aliens) > 1) {
+			alienNames += strconv.Itoa(currAlien.Id) + " and "
 		} else {
 			alienNames += strconv.Itoa(currAlien.Id) + ", "
 		}
@@ -97,14 +108,15 @@ func getNames(aliens []structs.Alien) string {
 	return alienNames
 }
 
-func wander(cities []structs.City) {
+func wander(worldX *structs.World) *structs.World {
+	cities := worldX.Cities
 	for i := range cities {
 		currCity := cities[i]
 		aliens := currCity.Aliens
 		if len(aliens) > 0 {
 			a := aliens[0]
-			a.Travel(currCity)
+			a.Travel(currCity) //todo: maybe return the updatede world.city or something like that
 		}
-
 	}
+	return worldX
 }
