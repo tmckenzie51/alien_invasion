@@ -35,25 +35,21 @@ func NewCity(name string, neighborInfo [][]string) *City {
 	return &city
 }
 
+//todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
 func (city *City) AddAlien(a Alien) {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
 }
 
 func (city *City) DestroyBridge(destroyedCity *City) {
-	fmt.Println("start destroying bridge")
-	fmt.Println("destroyed city: ", destroyedCity.Name)
-	fmt.Println("city being checked for bridges: ", city.Name)
-	fmt.Println("directions from ", city.Name, " are : ", city.Directions)
+	fmt.Println("Destroying bridges from", city.Name, " to ", destroyedCity.Name)
 	var directionsIndex []int
 	for i := range city.Directions {
 		direction := city.Directions[i]
-		fmt.Println("direction being considered for destruction: ", direction)
 		switch direction {
 		case "north":
 			adjacentCity := city.North
 			if adjacentCity.Name == destroyedCity.Name {
-				fmt.Println("let's destroy the north direction")
 				city.North = nil
 				city.NorthByName = ""
 				directionsIndex = append(directionsIndex, i)
@@ -61,7 +57,6 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 		case "south":
 			adjacentCity := city.South
 			if adjacentCity.Name == destroyedCity.Name {
-				fmt.Println("let's destroy the south direction")
 				city.South = nil
 				city.SouthByName = ""
 				directionsIndex = append(directionsIndex, i)
@@ -75,7 +70,6 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 			}
 		case "west":
 			adjacentCity := city.West
-			fmt.Println("in west case with adjacent city: ", adjacentCity)
 			if adjacentCity.Name == destroyedCity.Name {
 				city.West = nil
 				city.WestByName = ""
@@ -91,14 +85,20 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 		index := directionsIndex[j]
 		city.Directions = append(city.Directions[:index], city.Directions[index+1:]...)
 	}
-	fmt.Println("destroy bridge function ended")
 }
 
+//todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
 func (city City) RemoveAlien(a Alien) {
 	city.AlienCount -= 1
+	var alienIndex []int
 	for i := range city.Aliens {
 		if city.Aliens[i].Id == a.Id {
-			city.Aliens = append(city.Aliens[:i], city.Aliens[i+1:]...)
+			alienIndex = append(alienIndex, i)
 		}
+	}
+
+	for i := range alienIndex {
+		index := alienIndex[i]
+		city.Aliens = append(city.Aliens[:index], city.Aliens[index+1:]...)
 	}
 }

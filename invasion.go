@@ -24,11 +24,14 @@ func main() {
 	worldMap := read("./tests/X.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("X", worldMap)
-	fmt.Println("just created this world")
+
+	//todo: fix - status of world after creation is inaccurate
+	//check status of world
+	fmt.Println("checking status of world after creation")
 	worldX.PrintMap()
+
 	worldX = worldX.LaunchInvasion(numAliens)
-	fmt.Println("world after launch: ")
-	worldX.PrintMap()
+
 	for i := 0; i < 10000; i++ {
 		worldX = fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
@@ -73,14 +76,16 @@ func read(fileName string) map[string][][]string {
 func fightAndDestroy(worldX *structs.World) *structs.World {
 	cities := worldX.Cities
 	var citiesToDestroy []*structs.City
-	for i := range cities { //cities is getting confused because elements are being destroyed while in the loop
+
+	//get indices of cities to be destroyed
+	for i := range cities {
 		currCity := cities[i]
 		numAliens := currCity.AlienCount
 		if numAliens >= 2 {
 			citiesToDestroy = append(citiesToDestroy, currCity)
 		}
 	}
-
+	//Destroy cities at specified indices
 	for j := range citiesToDestroy {
 		currCity := citiesToDestroy[j]
 		worldX.DestroyCity(currCity)
@@ -88,7 +93,6 @@ func fightAndDestroy(worldX *structs.World) *structs.World {
 		alienNames := getNames(aliens)
 		destroyStatement := currCity.Name + " has been destroyed by aliens: " + alienNames
 		fmt.Println(destroyStatement)
-
 	}
 	return worldX
 }

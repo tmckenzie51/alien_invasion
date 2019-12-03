@@ -16,26 +16,26 @@ func NewAlien(id int) Alien {
 
 func (a Alien) Travel(city *City) {
 	prevLocation := city
-	fmt.Println(prevLocation.Name)
-	fmt.Println(prevLocation.Directions)
 	prevLocation.RemoveAlien(a)
 	if len(prevLocation.Directions) > 0 {
 		direction := prevLocation.Directions[rand.Intn(len(prevLocation.Directions))]
-		fmt.Println(direction)
 		switch direction {
-		case "north": //todo (REFINE): declare const directions, and iterate over the const directions in switch cases
+		case "north":
 			newLocation := prevLocation.North
 			newLocation.AddAlien(a)
+			fmt.Println("Alien moved from ", prevLocation.Name, "to ", newLocation.Name)
 		case "south":
-			fmt.Println(prevLocation.South)
 			newLocation := prevLocation.South
 			newLocation.AddAlien(a)
+			fmt.Println("Alien moved from ", prevLocation.Name, "to ", newLocation.Name)
 		case "east":
 			newLocation := prevLocation.East
 			newLocation.AddAlien(a)
+			fmt.Println("Alien moved from ", prevLocation.Name, "to ", newLocation.Name)
 		case "west":
 			newLocation := prevLocation.West
 			newLocation.AddAlien(a)
+			fmt.Println("Alien moved from ", prevLocation.Name, "to ", newLocation.Name)
 		default:
 			fmt.Println("travel direction error")
 		}

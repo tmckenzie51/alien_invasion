@@ -26,36 +26,38 @@ func NewWorld(worldName string, worldMap map[string][][]string) *World {
 	for i := 0; i < len(world.Cities); i++ {
 		city := world.Cities[i]
 		if city.NorthByName != "" {
-			city.North = nameToCity[city.NorthByName]
+			//add trap city to world
 			if !contains(world.Cities, city.NorthByName) {
 				northCity := NewCity(city.NorthByName, nil)
 				world.Cities = append(world.Cities, northCity)
 				nameToCity[city.NorthByName] = northCity
 			}
+			city.North = nameToCity[city.NorthByName]
 		}
 		if city.SouthByName != "" {
-			city.South = nameToCity[city.SouthByName]
+			//add trap city to world
 			if !contains(world.Cities, city.SouthByName) {
 				southCity := NewCity(city.SouthByName, nil)
 				world.Cities = append(world.Cities, southCity)
 				nameToCity[city.SouthByName] = southCity
 			}
+			city.South = nameToCity[city.SouthByName]
 		}
 		if city.EastByName != "" {
-			city.East = nameToCity[city.EastByName]
 			if !contains(world.Cities, city.EastByName) {
 				eastCity := NewCity(city.EastByName, nil)
 				world.Cities = append(world.Cities, eastCity)
 				nameToCity[city.SouthByName] = eastCity
 			}
+			city.East = nameToCity[city.EastByName]
 		}
 		if city.WestByName != "" {
-			city.West = nameToCity[city.WestByName]
 			if !contains(world.Cities, city.WestByName) {
 				westCity := NewCity(city.WestByName, nil)
 				world.Cities = append(world.Cities, westCity)
 				nameToCity[city.WestByName] = westCity
 			}
+			city.West = nameToCity[city.WestByName]
 		}
 	}
 	return &world
@@ -82,7 +84,7 @@ func (worldX *World) LaunchInvasion(numAliens int) *World {
 	return worldX
 }
 
-func (worldX World) DestroyCity(city *City) {
+func (worldX *World) DestroyCity(city *City) {
 	fmt.Println("city being destroyed: ", city.Name)
 	var cityIndex []int //list of indices of cities to be destroyed in the worldX.Cities list/array
 	for i := range worldX.Cities {
@@ -115,14 +117,18 @@ func (worldX World) PrintMap() {
 			direction := directions[j]
 			adjacentCity := ""
 			switch direction {
-			case "north": //todo(REFINE) : declare const directions, and iterate over the const directions in switch cases
-				adjacentCity = city.NorthByName
+			case "north":
+				//adjacentCity = city.NorthByName
+				adjacentCity = city.North.Name
 			case "south":
-				adjacentCity = city.SouthByName
+				//adjacentCity = city.SouthByName
+				adjacentCity = city.South.Name
 			case "east":
-				adjacentCity = city.EastByName
+				//adjacentCity = city.EastByName
+				adjacentCity = city.East.Name
 			case "west":
-				adjacentCity = city.WestByName
+				//adjacentCity = city.WestByName
+				adjacentCity = city.West.Name
 			default:
 				fmt.Println("PrintMap direction error")
 			}
