@@ -78,14 +78,19 @@ func contains(cities []City, cityName string) bool {
 func (worldX World) LaunchInvasion(numAliens int) World {
 	worldX.NumAliens = numAliens
 	for i := 0; i < numAliens; i++ {
-		randCity := worldX.Cities[rand.Intn(len(worldX.Cities))]
+		randIndex := rand.Intn(len(worldX.Cities))
+		randCity := worldX.Cities[randIndex]
 		a := NewAlien(i)
-		randCity.AddAlien(a)
+		randCity = randCity.AddAlien(a)
+		//replace randCity in worldX.Cities
+		worldX.Cities[randIndex] = randCity
+		fmt.Println(randCity.AlienCount, " aliens in ", randCity.Name)
 	}
 	return worldX
 }
 
 func (worldX World) DestroyCity(city City) {
+	fmt.Println("destroy ", city.Name)
 	for i := range worldX.Cities {
 		currCity := worldX.Cities[i]
 		if currCity.Name == city.Name { //delete city

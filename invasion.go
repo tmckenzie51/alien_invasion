@@ -73,6 +73,7 @@ func fightAndDestroy(worldX structs.World) {
 		currCity := cities[i]
 		numAliens := currCity.AlienCount
 		aliens := currCity.Aliens
+		//fmt.Println("num aliens in ", currCity.Name)
 		if numAliens >= 2 {
 			worldX.DestroyCity(currCity)
 			alienNames := getNames(aliens)

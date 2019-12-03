@@ -35,9 +35,10 @@ func NewCity(name string, neighborInfo [][]string) (*City, City) {
 	return &city, city
 }
 
-func (city City) AddAlien(a Alien) {
+func (city City) AddAlien(a Alien) City {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
+	return city
 }
 
 func (city City) DestroyBridge(destroyedCity City) {
