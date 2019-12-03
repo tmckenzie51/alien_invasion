@@ -37,13 +37,14 @@ func NewWorld(worldName string, worldMap map[string][][]string) World {
 	return world
 }
 
-func (worldX World) LaunchInvasion(numAliens int) {
+func (worldX World) LaunchInvasion(numAliens int) World {
 	worldX.NumAliens = numAliens
 	for i := 0; i < numAliens; i++ {
 		randCity := worldX.Cities[rand.Intn(len(worldX.Cities))]
 		a := NewAlien(i)
 		randCity.AddAlien(a)
 	}
+	return worldX
 }
 
 func (worldX World) DestroyCity(city City) {

@@ -22,14 +22,14 @@ import (
 
 func main() {
 	worldMap := read("./tests/X.txt") //todo: check if this works
-	numAliens, _ := strconv.Atoi(os.Args[0])
+	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("X", worldMap)
-	worldX.LaunchInvasion(numAliens)
+	worldX = worldX.LaunchInvasion(numAliens)
 	for i := 0; i < 10000; i++ { // todo(REFINE): save num_iters as a const
 		cities := worldX.Cities
 		fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
-		if numAliens <= 0 {
+		if numAliens == 0 || i == 9999 {
 			worldX.PrintMap()
 			return
 		} else {
@@ -100,7 +100,10 @@ func wander(cities []structs.City) {
 	for i := range cities {
 		currCity := cities[i]
 		aliens := currCity.Aliens
-		a := aliens[0]
-		a.Travel(currCity)
+		if len(aliens) > 0 {
+			a := aliens[0]
+			a.Travel(currCity)
+		}
+
 	}
 }
