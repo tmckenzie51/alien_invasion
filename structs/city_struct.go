@@ -4,8 +4,6 @@ package structs
 
 import "fmt"
 
-//todo issues: directions reference
-
 type City struct {
 	Name                                             string
 	AlienCount                                       int

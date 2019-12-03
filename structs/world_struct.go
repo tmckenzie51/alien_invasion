@@ -19,7 +19,7 @@ func NewWorld(worldName string, worldMap map[string][][]string) World {
 		world.Cities = append(world.Cities, city)
 		nameToCity[cityName] = pointerToCity
 	}
-	for i := 0; i <= len(world.Cities); i++ {
+	for i := 0; i < len(world.Cities); i++ {
 		city := world.Cities[i]
 		if city.NorthByName != "" {
 			city.North = nameToCity[city.NorthByName]
@@ -39,7 +39,7 @@ func NewWorld(worldName string, worldMap map[string][][]string) World {
 
 func (worldX World) LaunchInvasion(numAliens int) {
 	worldX.NumAliens = numAliens
-	for i := 0; i <= numAliens; i++ {
+	for i := 0; i < numAliens; i++ {
 		randCity := worldX.Cities[rand.Intn(len(worldX.Cities))]
 		a := NewAlien(i)
 		randCity.AddAlien(a)
@@ -82,6 +82,6 @@ func (worldX World) PrintMap() {
 			}
 			neighbors += direction + "=" + adjacentCity + " "
 		}
-		fmt.Println(city, " ", neighbors)
+		fmt.Println(city.Name, " ", neighbors)
 	}
 }

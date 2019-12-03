@@ -5,7 +5,6 @@ import (
 	"math/rand"
 )
 
-//todo: Issues: direction issue, unused function issue
 type Alien struct {
 	Id int
 }

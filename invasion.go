@@ -21,11 +21,11 @@ import (
 )
 
 func main() {
-	worldMap := read("/X.txt") //todo: create "X.txt" file
-	numAliens, _ := strconv.Atoi(os.Args[3])
+	worldMap := read("./tests/X.txt") //todo: check if this works
+	numAliens, _ := strconv.Atoi(os.Args[0])
 	worldX := structs.NewWorld("X", worldMap)
 	worldX.LaunchInvasion(numAliens)
-	for i := 0; i <= 10000; i++ { // todo(REFINE): save num_iters as a const
+	for i := 0; i < 10000; i++ { // todo(REFINE): save num_iters as a const
 		cities := worldX.Cities
 		fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
@@ -52,7 +52,7 @@ func read(fileName string) map[string][][]string {
 		txtLines = append(txtLines, scanner.Text())
 	}
 
-	file.Close() //todo: why this an unhandled error?
+	file.Close() //todo: unhandled error?
 
 	for _, eachLine := range txtLines { //example eachLine:  "Foo north=Bar west=Baz South=Qu-ux"
 		cityInfo := strings.Split(eachLine, " ") //example cityInfo : ["Foo", "north=Bar", "west=Baz", "South=Qu-ux"]
