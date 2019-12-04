@@ -46,7 +46,7 @@ func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.Ci
 			destroyedCities = append(destroyedCities, destroyed[j])
 		}
 		numAliens = worldX.NumAliens
-		numTraps := len(trapCities(worldX))
+		numTraps := numTrapCities(worldX)
 		if numAliens == 0 || i == numIters || numTraps == len(worldX.Cities) {
 			fmt.Println("at program end")
 			worldX.PrintMap()
@@ -59,15 +59,15 @@ func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.Ci
 	return worldX, destroyedCities, numMoves
 }
 
-func trapCities(worldX *structs.World) []*structs.City {
-	var traps []*structs.City
+func numTrapCities(worldX *structs.World) int {
+	numTraps := 0
 	for i := range worldX.Cities {
 		city := worldX.Cities[i]
 		if len(city.Directions) == 0 {
-			traps = append(traps, city)
+			numTraps += 1
 		}
 	}
-	return traps
+	return numTraps
 }
 
 func read(fileName string) map[string][][]string {

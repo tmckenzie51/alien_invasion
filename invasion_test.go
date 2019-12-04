@@ -5,26 +5,123 @@ import (
 	"testing"
 )
 
-var fileNames = [...]string{"./tests/symmetric.txt", "./tests/asymmetric.txt", "./tests/symmetryCombo.txt", "./tests/stress.txt", "./tests/oneLiner.txt"}
-
-func TestSymmetryCombo(t *testing.T) {
-	fileName := "./tests/symmetryCombo.txt"
+func testInvade(fileName string, numAliens int) (*structs.World, []*structs.City, int, int, int, int) {
 	worldMap := read(fileName)
 	world := structs.NewWorld("SymmetryCombo", worldMap)
-	numAliens := 7
 	world = world.LaunchInvasion(numAliens)
-	world = invade(world, numAliens)
+	aftermathWorld, destroyedCities, numMoves := invade(world, numAliens)
+	alienCount := aftermathWorld.NumAliens
+	numTraps := numTrapCities(aftermathWorld)
+	numCities := len(aftermathWorld.Cities)
+	return aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities
+}
 
-	//got := Abs(-1)
-	if got != 1 {
-		t.Errorf("Abs(-1) = %d; want 1", got)
+func TestSymmetric(t *testing.T) {
+	fileName := "./tests/symmetric.txt"
+	var numberOfAliens = [...]int{0, 1, 3, 4}
+	for k := range numberOfAliens {
+		numAliens := numberOfAliens[k]
+		aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities := testInvade(fileName, numAliens)
+		//check for errors in city destruction
+		for i := range aftermathWorld.Cities {
+			for j := range destroyedCities {
+				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
+					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+				}
+			}
+		}
+
+		//check for errors in ending of program
+		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
+		}
 	}
 }
 
-//1. save fileNames in main
-//2. run several unit tests, namely:
-//get worldmap from creating newworld
-// get stateOfWorld after Launch invasion (with preferred numAliens) --> get aliens in each city & numAliens in each city
-//get destroyed cities
-//get killed aliens from :  destruction statements, for alien tracking
-//check for errrors?
+func TestAsymmetric(t *testing.T) {
+	fileName := "./tests/asymmetric.txt"
+	var numberOfAliens = [...]int{0, 2, 3, 5}
+	for k := range numberOfAliens {
+		numAliens := numberOfAliens[k]
+		aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities := testInvade(fileName, numAliens)
+		//check for errors in city destruction
+		for i := range aftermathWorld.Cities {
+			for j := range destroyedCities {
+				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
+					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+				}
+			}
+		}
+
+		//check for errors in ending of program
+		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
+		}
+	}
+}
+
+func TestSymmetryCombo(t *testing.T) {
+	fileName := "./tests/symmetryCombo.txt"
+	var numberOfAliens = [...]int{0, 2, 5, 7}
+	for k := range numberOfAliens {
+		numAliens := numberOfAliens[k]
+		aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities := testInvade(fileName, numAliens)
+		//check for errors in city destruction
+		for i := range aftermathWorld.Cities {
+			for j := range destroyedCities {
+				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
+					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+				}
+			}
+		}
+
+		//check for errors in ending of program
+		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
+		}
+	}
+}
+
+func TestOneLiner(t *testing.T) {
+	fileName := "./tests/oneLiner.txt"
+	var numberOfAliens = [...]int{0, 1, 2}
+	for k := range numberOfAliens {
+		numAliens := numberOfAliens[k]
+		aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities := testInvade(fileName, numAliens)
+		//check for errors in city destruction
+		for i := range aftermathWorld.Cities {
+			for j := range destroyedCities {
+				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
+					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+				}
+			}
+		}
+
+		//check for errors in ending of program
+		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
+		}
+	}
+}
+
+func TestStress(t *testing.T) {
+	fileName := "./tests/stress.txt"
+	var numberOfAliens = [...]int{0, 6, 11, 14}
+	for k := range numberOfAliens {
+		numAliens := numberOfAliens[k]
+		aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities := testInvade(fileName, numAliens)
+		//check for errors in city destruction
+		for i := range aftermathWorld.Cities {
+			for j := range destroyedCities {
+				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
+					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+				}
+			}
+		}
+
+		//check for errors in ending of program
+		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
+		}
+	}
+}
