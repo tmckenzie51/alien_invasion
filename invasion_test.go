@@ -1,17 +1,21 @@
 package main //todo: check if this actually works
 
 import (
+	"alien_invasion/structs"
 	"testing"
 )
 
 var fileNames = [...]string{"./tests/symmetric.txt", "./tests/asymmetric.txt", "./tests/symmetryCombo.txt", "./tests/stress.txt", "./tests/oneLiner.txt"}
 
 func TestSymmetryCombo(t *testing.T) {
+	fileName := "./tests/symmetryCombo.txt"
+	worldMap := read(fileName)
+	world := structs.NewWorld("SymmetryCombo", worldMap)
+	numAliens := 7
+	world = world.LaunchInvasion(numAliens)
+	world = invade(world, numAliens)
 
-	for i := range fileNames {
-		main(fileNames[i])
-	}
-	got := Abs(-1)
+	//got := Abs(-1)
 	if got != 1 {
 		t.Errorf("Abs(-1) = %d; want 1", got)
 	}

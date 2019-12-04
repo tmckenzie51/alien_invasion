@@ -26,7 +26,7 @@ const numIters = 10000
 func main() {
 	worldMap := read("./tests/symmetryCombo.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
-	worldX := structs.NewWorld("X", worldMap)
+	worldX := structs.NewWorld("SymmetryCombo", worldMap)
 
 	//check status of world
 	fmt.Println("checking status of world after creation")
@@ -36,30 +36,38 @@ func main() {
 	invade(worldX, numAliens)
 }
 
-func invade(worldX *structs.World, numAliens int) *structs.World {
-	for i := 0; i < numIters; i++ {
-		worldX = fightAndDestroy(worldX)
+func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.City, int) {
+	var destroyedCities []*structs.City
+	numMoves := 0
+	for i := 0; i <= numIters; i++ {
+		var destroyed []*structs.City
+		worldX, destroyed = fightAndDestroy(worldX)
+		for j := range destroyed {
+			destroyedCities = append(destroyedCities, destroyed[j])
+		}
 		numAliens = worldX.NumAliens
-		if numAliens == 0 || i == numIters-1 || numTrapCities(worldX) == len(worldX.Cities) {
+		numTraps := len(trapCities(worldX))
+		if numAliens == 0 || i == numIters || numTraps == len(worldX.Cities) {
 			fmt.Println("at program end")
 			worldX.PrintMap()
-			return worldX
+			return worldX, destroyedCities, numMoves
 		} else {
 			worldX.Cities = wander(worldX)
+			numMoves += 1
 		}
 	}
-	return worldX
+	return worldX, destroyedCities, numMoves
 }
 
-func numTrapCities(worldX *structs.World) int {
-	numTraps := 0
+func trapCities(worldX *structs.World) []*structs.City {
+	var traps []*structs.City
 	for i := range worldX.Cities {
 		city := worldX.Cities[i]
 		if len(city.Directions) == 0 {
-			numTraps += 1
+			traps = append(traps, city)
 		}
 	}
-	return numTraps
+	return traps
 }
 
 func read(fileName string) map[string][][]string {
@@ -91,7 +99,7 @@ func read(fileName string) map[string][][]string {
 	return worldMap
 }
 
-func fightAndDestroy(worldX *structs.World) *structs.World {
+func fightAndDestroy(worldX *structs.World) (*structs.World, []*structs.City) {
 	cities := worldX.Cities
 	var citiesToDestroy []*structs.City
 
@@ -112,7 +120,7 @@ func fightAndDestroy(worldX *structs.World) *structs.World {
 		destroyStatement := currCity.Name + " has been destroyed by aliens: " + alienNames
 		fmt.Println(destroyStatement)
 	}
-	return worldX
+	return worldX, citiesToDestroy
 }
 
 //todo: fix - the aliens list here is inaccurate
