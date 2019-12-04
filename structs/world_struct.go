@@ -79,7 +79,7 @@ func (worldX *World) LaunchInvasion(numAliens int) *World {
 		randCity := worldX.Cities[randIndex]
 		a := NewAlien(i)
 		randCity.AddAlien(a)
-		fmt.Println(randCity.AlienCount, " aliens in ", randCity.Name) //todo: remove later
+		fmt.Println(randCity.AlienCount, " aliens (", a.Id, ") in ", randCity.Name) //todo: remove later
 	}
 	return worldX
 }

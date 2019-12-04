@@ -25,21 +25,35 @@ func main() {
 	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("X", worldMap)
 
-	//todo: fix - status of world after creation is inaccurate
 	//check status of world
 	fmt.Println("checking status of world after creation")
 	worldX.PrintMap()
 
 	worldX = worldX.LaunchInvasion(numAliens)
 
-	for i := 0; i < 10000; i++ {
+	for i := 0; i < 10000; i++ { //todo: optimize for trap cities
 		worldX = fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
 		if numAliens == 0 || i == 9999 {
-			worldX.PrintMap()
+			fmt.Println("at program end")
+			worldX.PrintMap() //todo: print "world empty or something. Maybe also print trap cities as well
 			return
 		} else {
 			worldX = wander(worldX)
+
+			//checking if the corect worldX is returned
+			if len(worldX.Cities) > 0 {
+				for j := range worldX.Cities {
+					currCity := worldX.Cities[j]
+					if currCity.Name == "Baz" {
+						fmt.Println("checking if the worldX returned from wander is correct")
+						for k := range currCity.Aliens {
+							fmt.Println(currCity.Aliens[k])
+						}
+					}
+				}
+			}
+
 		}
 	}
 }
@@ -89,7 +103,7 @@ func fightAndDestroy(worldX *structs.World) *structs.World {
 	for j := range citiesToDestroy {
 		currCity := citiesToDestroy[j]
 		worldX.DestroyCity(currCity)
-		aliens := currCity.Aliens
+		aliens := currCity.Aliens //todo: fix: not the correct list of aliens at currcity
 		alienNames := getNames(aliens)
 		destroyStatement := currCity.Name + " has been destroyed by aliens: " + alienNames
 		fmt.Println(destroyStatement)
@@ -97,7 +111,8 @@ func fightAndDestroy(worldX *structs.World) *structs.World {
 	return worldX
 }
 
-func getNames(aliens []structs.Alien) string {
+//todo: fix - the aliens list here is inaccurate
+func getNames(aliens []*structs.Alien) string {
 	alienNames := ""
 	for i := range aliens {
 		currAlien := aliens[i]
@@ -116,11 +131,61 @@ func wander(worldX *structs.World) *structs.World {
 	cities := worldX.Cities
 	for i := range cities {
 		currCity := cities[i]
+		//fmt.Println("wandering from city: ", currCity.Name)
 		aliens := currCity.Aliens
 		if len(aliens) > 0 {
 			a := aliens[0]
-			a.Travel(currCity) //todo: maybe return the updatede world.city or something like that
+			//a.Travel(currCity)
+			newCity := a.Travel(currCity)
+			replaceWith(worldX.Cities, newCity)
 		}
 	}
-	return worldX
+
+	//check that cities are correct
+	for i := range worldX.Cities {
+		city := cities[i]
+		if city.Name == "Baz" {
+			fmt.Println("check cities in wander")
+			for j := range city.Aliens {
+				fmt.Println(city.Aliens[j].Id)
+			}
+		}
+	}
+
+	worldX.Cities = cities
+	return worldX //todo: is this returning old or new world X?
+}
+
+//TODO: REMOVE FUNCTION LATER. BOTH OLD AND NEW CITIES ARE CORRECT
+func replaceWith(cities []*structs.City, newCity *structs.City) {
+	for i := range cities {
+		city := cities[i]
+		fmt.Println(city.Name)
+		fmt.Println(newCity.Name)
+
+		fmt.Println(city.Aliens)
+		if city.Name == newCity.Name {
+
+			//print aliens at city to see if it is correct or no
+			fmt.Println("check old city")
+			for j := range city.Aliens {
+				fmt.Println(city.Aliens[j].Id)
+			}
+
+			//print aliens in new city to see if correct or no
+			fmt.Println("check new City")
+			for j := range newCity.Aliens {
+				fmt.Println(newCity.Aliens[j].Id)
+			}
+
+			//update cities
+			cities[i] = newCity
+
+			//print aliens in  city to see if updated correctly  or no
+			fmt.Println("check update")
+			for j := range cities[i].Aliens {
+				fmt.Println(cities[i].Aliens[j].Id)
+			}
+		}
+	}
 }

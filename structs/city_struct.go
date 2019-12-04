@@ -7,7 +7,7 @@ import "fmt"
 type City struct {
 	Name                                             string
 	AlienCount                                       int
-	Aliens                                           []Alien
+	Aliens                                           []*Alien
 	Directions                                       []string
 	NorthByName, SouthByName, EastByName, WestByName string
 	North, South, East, West                         *City
@@ -36,9 +36,20 @@ func NewCity(name string, neighborInfo [][]string) *City {
 }
 
 //todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
-func (city *City) AddAlien(a Alien) {
+//todo: maybe return city.aliens here instead
+func (city *City) AddAlien(a *Alien) *City {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
+
+	if len(city.Aliens) > 1 {
+		fmt.Println("added alien to ", city.Name, ". Aliens =  ")
+		for i := range city.Aliens {
+			fmt.Println(city.Aliens[i].Id)
+		}
+	}
+
+	return city
+
 }
 
 func (city *City) DestroyBridge(destroyedCity *City) {
@@ -88,7 +99,7 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 }
 
 //todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
-func (city City) RemoveAlien(a Alien) {
+func (city City) RemoveAlien(a *Alien) {
 	city.AlienCount -= 1
 	var alienIndex []int
 	for i := range city.Aliens {
