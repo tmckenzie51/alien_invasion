@@ -8,6 +8,7 @@
 //cities names are all string and do not contain numbers (int or float), and the syntactical requirements of the input is met
 //as specified in the problem specifics detailed in the alien_invasion pdf document.
 
+//todo: remove extra prints
 package main
 
 import (
@@ -20,6 +21,8 @@ import (
 	"strings"
 )
 
+const numIters = 10000
+
 func main() {
 	worldMap := read("./tests/X.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
@@ -29,17 +32,29 @@ func main() {
 	fmt.Println("checking status of world after creation")
 	worldX.PrintMap()
 	worldX = worldX.LaunchInvasion(numAliens)
-	for i := 0; i < 10000; i++ { //todo: optimize for trap cities
+	for i := 0; i < numIters; i++ { //todo: optimize for trap cities
 		worldX = fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
-		if numAliens == 0 || i == 9999 {
+		if numAliens == 0 || i == numIters-1 || numTrapCities(worldX) == len(worldX.Cities) {
+			fmt.Println(i)
 			fmt.Println("at program end")
-			worldX.PrintMap() //todo: print "world empty or something. Maybe also print trap cities as well
+			worldX.PrintMap()
 			return
 		} else {
 			worldX.Cities = wander(worldX)
 		}
 	}
+}
+
+func numTrapCities(worldX *structs.World) int {
+	numTraps := 0
+	for i := range worldX.Cities {
+		city := worldX.Cities[i]
+		if len(city.Directions) == 0 {
+			numTraps += 1
+		}
+	}
+	return numTraps
 }
 
 func read(fileName string) map[string][][]string {
@@ -116,7 +131,7 @@ func wander(worldX *structs.World) []*structs.City {
 	for i := range cities {
 		currCity := cities[i]
 		aliens := currCity.Aliens
-		if len(aliens) > 0 {
+		if len(aliens) > 0 && len(currCity.Directions) > 0 {
 			a := aliens[0]
 			a.Travel(currCity)
 		}
