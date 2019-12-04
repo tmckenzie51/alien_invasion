@@ -27,6 +27,7 @@ import (
 
 const numIters = 10000
 
+//Driver Code
 func main() {
 	worldMap := read("./tests/symmetryCombo.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
@@ -35,6 +36,8 @@ func main() {
 	invade(worldX, numAliens)
 }
 
+//after initial launch/alien deployment into the cities, we now carry on with the invasion, by destroying the appropriate cities,
+//accounting for alien deaths in fights, and do the necessary city, etc. assignments when aliens move/wander around.
 func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.City, int) {
 	var destroyedCities []*structs.City
 	numMoves := 0
@@ -46,6 +49,8 @@ func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.Ci
 		}
 		numAliens = worldX.NumAliens
 		numTraps := numTrapCities(worldX)
+		//trap city optimization: when all the cities lef tin the world are trap cities we can terminate the program early, because all surviving aliens are trapped
+		//in their respective cities
 		if numAliens == 0 || i == numIters || numTraps == len(worldX.Cities) {
 			worldX.PrintMap()
 			return worldX, destroyedCities, numMoves
@@ -57,6 +62,7 @@ func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.Ci
 	return worldX, destroyedCities, numMoves
 }
 
+//Get the number of cities that do not have any bridges leading out of them. These are called 'trap cities'.
 func numTrapCities(worldX *structs.World) int {
 	numTraps := 0
 	for i := range worldX.Cities {
@@ -68,6 +74,7 @@ func numTrapCities(worldX *structs.World) int {
 	return numTraps
 }
 
+//Read in the input world files
 func read(fileName string) map[string][][]string {
 	worldMap := make(map[string][][]string)
 	file, err := os.Open(fileName)
@@ -97,6 +104,8 @@ func read(fileName string) map[string][][]string {
 	return worldMap
 }
 
+//Scan the existing cities to see which have more than 1 alien, and destroy these cities and all bridges leading to them.
+//Alien count is adjusted when cities are destroyed as they kill each other in the process.
 func fightAndDestroy(worldX *structs.World) (*structs.World, []*structs.City) {
 	cities := worldX.Cities
 	var citiesToDestroy []*structs.City
@@ -121,6 +130,7 @@ func fightAndDestroy(worldX *structs.World) (*structs.World, []*structs.City) {
 	return worldX, citiesToDestroy
 }
 
+//Get the ID of the aliens remaining in a specific city
 func getNames(aliens []*structs.Alien) string {
 	alienNames := ""
 	for i := range aliens {
@@ -136,6 +146,7 @@ func getNames(aliens []*structs.Alien) string {
 	return alienNames
 }
 
+//Aliens roam around randomly, moving from city to city
 func wander(worldX *structs.World) []*structs.City {
 	cities := worldX.Cities
 	for i := range cities {

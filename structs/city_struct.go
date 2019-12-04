@@ -5,20 +5,22 @@ package structs
 import "fmt"
 
 type City struct {
-	Name                                             string
-	AlienCount                                       int
-	Aliens                                           []*Alien
-	Directions                                       []string
-	NorthByName, SouthByName, EastByName, WestByName string
-	North, South, East, West                         *City
+	Name                                             string   //Name of city
+	AlienCount                                       int      //number of aliens in city
+	Aliens                                           []*Alien //list of aliens in city
+	Directions                                       []string // Bridges leading out from city
+	NorthByName, SouthByName, EastByName, WestByName string   //string name of bridge destinations from city
+	North, South, East, West                         *City    // bridge city type destinations
 }
 
+//Create a new City object
 func NewCity(name string, neighborInfo [][]string) *City {
-	city := City{Name: name, AlienCount: 0}
+	city := City{Name: name, AlienCount: 0} //initalize alien count in city as 0
 	for i := range neighborInfo {
-		direction := neighborInfo[i][0] //example direction : "north". Note: direction is not capitalized
+		direction := neighborInfo[i][0]
 		adjacentCity := neighborInfo[i][1]
 		city.Directions = append(city.Directions, direction)
+		//Assign names of destinations of bridges from city
 		switch direction {
 		case "north":
 			city.NorthByName = adjacentCity
@@ -35,12 +37,14 @@ func NewCity(name string, neighborInfo [][]string) *City {
 	return &city
 }
 
+//Add an alien to city
 func (city *City) AddAlien(a *Alien) *City {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
 	return city
 }
 
+//Scan city for bridges that may lead to a destination city previously destroyed. If such a bridge is found, destroy it.
 func (city *City) DestroyBridge(destroyedCity *City) {
 	var directionsIndex []int
 	for i := range city.Directions {
@@ -79,13 +83,14 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 		}
 	}
 
-	//update directions/bridges leading out from the city
+	//update bridges leading out from the city
 	for j := range directionsIndex {
 		index := directionsIndex[j]
 		city.Directions = append(city.Directions[:index], city.Directions[index+1:]...)
 	}
 }
 
+//Remove an alien form a city (usually called when an alien moves from this city to another when wandering around)
 func (city City) RemoveAlien(a *Alien) {
 	city.AlienCount -= 1
 	var alienIndex []int

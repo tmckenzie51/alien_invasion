@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+//Test Skeleton/Driver Code
 func testInvade(fileName string, numAliens int) (*structs.World, []*structs.City, int, int, int, int) {
 	worldMap := read(fileName)
 	world := structs.NewWorld("SymmetryCombo", worldMap)
@@ -16,6 +17,7 @@ func testInvade(fileName string, numAliens int) (*structs.World, []*structs.City
 	return aftermathWorld, destroyedCities, numMoves, alienCount, numTraps, numCities
 }
 
+//Test Symmetric World for invasions of sizes 0,1,3,4
 func TestSymmetric(t *testing.T) {
 	fileName := "./tests/symmetric.txt"
 	var numberOfAliens = [...]int{0, 1, 3, 4}
@@ -39,6 +41,7 @@ func TestSymmetric(t *testing.T) {
 	}
 }
 
+//Test Asymmetric World for invasions of sizes 0,2,3,5
 func TestAsymmetric(t *testing.T) {
 	fileName := "./tests/asymmetric.txt"
 	var numberOfAliens = [...]int{0, 2, 3, 5}
@@ -61,6 +64,7 @@ func TestAsymmetric(t *testing.T) {
 	}
 }
 
+//Test Symmetry Combination World for invasions of sizes 0,2,5,7
 func TestSymmetryCombo(t *testing.T) {
 	fileName := "./tests/symmetryCombo.txt"
 	var numberOfAliens = [...]int{0, 2, 5, 7}
@@ -83,6 +87,7 @@ func TestSymmetryCombo(t *testing.T) {
 	}
 }
 
+//Test One-Liner World for invasions of sizes 0,1,2
 func TestOneLiner(t *testing.T) {
 	fileName := "./tests/oneLiner.txt"
 	var numberOfAliens = [...]int{0, 1, 2}
@@ -105,6 +110,7 @@ func TestOneLiner(t *testing.T) {
 	}
 }
 
+//Test Stress/Complex World for invasions of sizes 0,6,11,14
 func TestStress(t *testing.T) {
 	fileName := "./tests/stress.txt"
 	var numberOfAliens = [...]int{0, 6, 11, 14}
