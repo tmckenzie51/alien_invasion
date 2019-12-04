@@ -51,5 +51,5 @@ Each of these worlds are tested with launch parties of varying sizes listed belo
  *test go -run NameOfTest*
  3. To run program, run the following on the command line:   
  *go run invasion.go << NumberOfAliens >>*  
- where  *<< NumberOfAliens >>* is your desired alien launch party size. 
+ where  *<< NumberOfAliens >>* is your desired alien launch party size. The default world is the Symmetry Combination World. This may be modified by changing the input filepath in the read function in invasion.go 
   
