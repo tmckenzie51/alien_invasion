@@ -79,13 +79,11 @@ func (worldX *World) LaunchInvasion(numAliens int) *World {
 		randCity := worldX.Cities[randIndex]
 		a := NewAlien(i)
 		randCity.AddAlien(a)
-		fmt.Println(randCity.AlienCount, " aliens (", a.Id, ") in ", randCity.Name) //todo: remove later
 	}
 	return worldX
 }
 
 func (worldX *World) DestroyCity(city *City) {
-	fmt.Println("city being destroyed: ", city.Name)
 	var cityIndex []int //list of indices of cities to be destroyed in the worldX.Cities list/array
 	for i := range worldX.Cities {
 		currCity := worldX.Cities[i]

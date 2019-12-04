@@ -1,4 +1,4 @@
-package main //todo: check if this actually works
+package main
 
 import (
 	"alien_invasion/structs"
@@ -26,13 +26,14 @@ func TestSymmetric(t *testing.T) {
 		for i := range aftermathWorld.Cities {
 			for j := range destroyedCities {
 				if aftermathWorld.Cities[i].Name == destroyedCities[j].Name {
-					t.Error("destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
+					t.Error("numAliens = ", numAliens, " : destroyed city ", destroyedCities[j].Name, " should not be in final worldMap")
 				}
 			}
 		}
 
 		//check for errors in ending of program
 		if alienCount != 0 && numMoves != numIters && numCities != numTraps {
+			t.Error("numAliens = ", numAliens, " : ")
 			t.Errorf("program ended prematurely. Got: alienCount = %d, numMoves = %d, numCities = %d, and numTraps = %d. Expected: alienCount = 0, or numMoves = numIters, or numCities = numTraps ", alienCount, numMoves, numCities, numTraps)
 		}
 	}

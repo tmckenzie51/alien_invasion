@@ -35,25 +35,13 @@ func NewCity(name string, neighborInfo [][]string) *City {
 	return &city
 }
 
-//todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
-//todo: maybe return city.aliens here instead
 func (city *City) AddAlien(a *Alien) *City {
 	city.AlienCount += 1
 	city.Aliens = append(city.Aliens, a)
-
-	if len(city.Aliens) > 1 {
-		fmt.Println("added alien to ", city.Name, ". Aliens =  ")
-		for i := range city.Aliens {
-			fmt.Println(city.Aliens[i].Id)
-		}
-	}
-
 	return city
-
 }
 
 func (city *City) DestroyBridge(destroyedCity *City) {
-	fmt.Println("Destroying bridges from", city.Name, " to ", destroyedCity.Name)
 	var directionsIndex []int
 	for i := range city.Directions {
 		direction := city.Directions[i]
@@ -98,7 +86,6 @@ func (city *City) DestroyBridge(destroyedCity *City) {
 	}
 }
 
-//todo: there might be some issues with alien tracking because currently not using pointers to reference aliens
 func (city City) RemoveAlien(a *Alien) {
 	city.AlienCount -= 1
 	var alienIndex []int

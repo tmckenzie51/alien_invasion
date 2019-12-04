@@ -31,11 +31,6 @@ func main() {
 	worldMap := read("./tests/symmetryCombo.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("SymmetryCombo", worldMap)
-
-	//check status of world
-	fmt.Println("checking status of world after creation")
-	worldX.PrintMap()
-
 	worldX = worldX.LaunchInvasion(numAliens)
 	invade(worldX, numAliens)
 }
@@ -52,7 +47,6 @@ func invade(worldX *structs.World, numAliens int) (*structs.World, []*structs.Ci
 		numAliens = worldX.NumAliens
 		numTraps := numTrapCities(worldX)
 		if numAliens == 0 || i == numIters || numTraps == len(worldX.Cities) {
-			fmt.Println("at program end")
 			worldX.PrintMap()
 			return worldX, destroyedCities, numMoves
 		} else {
@@ -88,7 +82,7 @@ func read(fileName string) map[string][][]string {
 		txtLines = append(txtLines, scanner.Text())
 	}
 
-	file.Close() //todo: unhandled error?
+	file.Close()
 
 	for _, eachLine := range txtLines {
 		cityInfo := strings.Split(eachLine, " ")
@@ -119,7 +113,7 @@ func fightAndDestroy(worldX *structs.World) (*structs.World, []*structs.City) {
 	for j := range citiesToDestroy {
 		currCity := citiesToDestroy[j]
 		worldX.DestroyCity(currCity)
-		aliens := currCity.Aliens //todo: fix: not the correct list of aliens at currcity
+		aliens := currCity.Aliens
 		alienNames := getNames(aliens)
 		destroyStatement := currCity.Name + " has been destroyed by aliens: " + alienNames
 		fmt.Println(destroyStatement)
@@ -127,7 +121,6 @@ func fightAndDestroy(worldX *structs.World) (*structs.World, []*structs.City) {
 	return worldX, citiesToDestroy
 }
 
-//todo: fix - the aliens list here is inaccurate
 func getNames(aliens []*structs.Alien) string {
 	alienNames := ""
 	for i := range aliens {

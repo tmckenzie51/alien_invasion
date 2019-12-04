@@ -63,6 +63,9 @@ All inputs make geographical sense, meaning that, for example: there will be no 
 Assumption 4:
 No need to filter for invalid input. We will assume that all input is valid in terms or character/string capitalization, white spaces, equal signs, etc.
 
+Assumption 5:  
+The number of aliens inputted in the command line argument will not be negative, and also will not be greater than the maximum integer value in GoLang
+ 
  ****How To Use****
  1. Fork/Clone Repository
  2. To run tests, run the following on the command line:   
