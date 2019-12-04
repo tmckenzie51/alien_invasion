@@ -24,7 +24,7 @@ import (
 const numIters = 10000
 
 func main() {
-	worldMap := read("./tests/X.txt")
+	worldMap := read("./tests/symmetryCombo.txt")
 	numAliens, _ := strconv.Atoi(os.Args[1])
 	worldX := structs.NewWorld("X", worldMap)
 
