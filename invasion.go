@@ -31,19 +31,24 @@ func main() {
 	//check status of world
 	fmt.Println("checking status of world after creation")
 	worldX.PrintMap()
+
 	worldX = worldX.LaunchInvasion(numAliens)
-	for i := 0; i < numIters; i++ { //todo: optimize for trap cities
+	invade(worldX, numAliens)
+}
+
+func invade(worldX *structs.World, numAliens int) *structs.World {
+	for i := 0; i < numIters; i++ {
 		worldX = fightAndDestroy(worldX)
 		numAliens = worldX.NumAliens
 		if numAliens == 0 || i == numIters-1 || numTrapCities(worldX) == len(worldX.Cities) {
-			fmt.Println(i)
 			fmt.Println("at program end")
 			worldX.PrintMap()
-			return
+			return worldX
 		} else {
 			worldX.Cities = wander(worldX)
 		}
 	}
+	return worldX
 }
 
 func numTrapCities(worldX *structs.World) int {
