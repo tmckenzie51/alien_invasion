@@ -1,0 +1,10 @@
+A north=B east=F west=K
+B north=C west=K south=A
+C east=D west=K
+D south=E east=G
+E south=F west=B east=H
+F east=I west=A
+G west=D
+H north=G west=E south=I
+I north=H
+J west=H
