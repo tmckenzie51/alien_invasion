@@ -45,6 +45,24 @@ Each of these worlds are tested with launch parties of varying sizes listed belo
 3. the same number of aliens as there are cities in the world to be tested
 4. more aliens than there are cities in teh world to be tested. 
 
+****Assumptions****
+
+Assumption 1:
+For each direction (north, south,east, west), there will be at most 1 city in that direction.
+in other words, there can not be a road in any direction that leads to multiple cities
+in terms of our input, this means that "Foo north=Bar,Bee" is not a valid input
+
+Assumption 2:
+all inputted world_maps meet the aforementioned standards/requirements of a the world, such as no multiple destinations from the same road,
+cities names are all string and do not contain numbers (int or float), and the syntactical requirements of the input is met
+as specified in the problem specifics detailed in the alien_invasion pdf document.
+
+Assumption 3: 
+All inputs make geographical sense, meaning that, for example: there will be no input such that Foo.North = Bar, and Bar.North = Foo. 
+
+Assumption 4:
+No need to filter for invalid input. We will assume that all input is valid in terms or character/string capitalization, white spaces, equal signs, etc.
+
  ****How To Use****
  1. Fork/Clone Repository
  2. To run tests, run the following on the command line:   

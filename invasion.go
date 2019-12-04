@@ -8,7 +8,11 @@
 //cities names are all string and do not contain numbers (int or float), and the syntactical requirements of the input is met
 //as specified in the problem specifics detailed in the alien_invasion pdf document.
 
-//todo: remove extra prints
+//Assumption 3:
+//All inputs make geographical sense, meaning that, for example: there will be no input such that Foo.North = Bar, and Bar.North = Foo.
+
+//Assumption 4:
+//No need to filter for invalid input. We will assume that all input is valid in terms or character/string capitalization, white spaces, equal signs, etc.
 package main
 
 import (
