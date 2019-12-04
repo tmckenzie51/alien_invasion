@@ -16,7 +16,6 @@ func NewAlien(id int) *Alien {
 
 func (a *Alien) Travel(city *City) *City {
 	prevLocation := city
-	prevLocation.RemoveAlien(a)
 	var newCity *City
 	if len(prevLocation.Directions) > 0 {
 		direction := prevLocation.Directions[rand.Intn(len(prevLocation.Directions))]
@@ -41,5 +40,10 @@ func (a *Alien) Travel(city *City) *City {
 			fmt.Println("travel direction error")
 		}
 	}
-	return newCity //todo: remove later: NOTE :  new city is CORRECT
+	if newCity == nil {
+		return prevLocation
+	} else {
+		prevLocation.RemoveAlien(a)
+		return newCity
+	}
 }

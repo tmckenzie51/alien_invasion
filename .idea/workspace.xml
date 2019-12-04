@@ -5,8 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/invasion.go" beforeDir="false" afterPath="$PROJECT_DIR$/invasion.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/structs/alien_struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/alien_struct.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structs/city_struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/city_struct.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/structs/world_struct.go" beforeDir="false" afterPath="$PROJECT_DIR$/structs/world_struct.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
